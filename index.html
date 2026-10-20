@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NEW Gym Schedule</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background-color: #060911;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .mono-num {
+      font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* iPhone Air Viewport Container (420px width, centered on larger screens, 100% on phone) */
+    .iphone-air-shell {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      background-color: #0b101b;
+      border-left: 1px solid #1e293b;
+      border-right: 1px solid #1e293b;
+      padding-bottom: 20px;
+      position: relative;
+    }
+    .iphone-air-shell.wide-mode {
+      max-width: 960px;
+    }
+
+    /* Top Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: rgba(11, 16, 27, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1e293b;
+      padding: 8px 10px;
+    }
+    .header-row-1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    /* Three-dashes top-left menu button */
+    .hamburger-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background-color: #172033;
+      border: 1px solid #2e3d59;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .hamburger-btn:active,
+    .hamburger-btn:hover {
+      background-color: #24324d;
+    }
+    .hamburger-line {
+      width: 16px;
+      height: 2px;
+      background-color: #f8fafc;
+      border-radius: 99px;
+      display: block;
+    }
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .app-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #6ee7b7;
+      margin-top: 1px;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #10b981;
+      display: inline-block;
+    }
+
+    /* Dropdown Menu (Chat, Exercise, Diet, Settings) */
+    .side-nav-menu {
+      position: absolute;
+      left: 0;
+      top: 40px;
+      z-index: 80;
+      width: 200px;
+      border-radius: 12px;
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.9);
+      padding: 5px 0;
+      overflow: hidden;
+    }
+    .side-nav-header {
+      padding: 6px 12px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      border-bottom: 1px solid #1e293b;
+    }
+    .nav-menu-item {
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .nav-menu-item:last-child {
+      border-bottom: none;
+    }
+    .nav-menu-item:hover,
+    .nav-menu-item:active {
+      background-color: #1e293b;
+    }
+    .nav-menu-item.active-nav {
+      color: #fb923c;
+      background-color: rgba(249, 115, 22, 0.14);
+      font-weight: 800;
+    }
+    .nav-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(249, 115, 22, 0.22);
+      color: #fdba74;
+      font-weight: 700;
+    }
+
+    /* Action Buttons Bar */
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .ctrl-btn {
+      padding: 5px 7px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      background-color: #172033;
+      color: #cbd5e1;
+      border: 1px solid #2e3d59;
+      cursor: pointer;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+    .ctrl-btn:hover,
+    .ctrl-btn:active {
+      background-color: #24324d;
+      color: #ffffff;
+    }
+    .ctrl-btn.btn-amber {
+      background-color: rgba(245, 158, 11, 0.16);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    .ctrl-btn.btn-emerald {
+      background-color: rgba(16, 185, 129, 0.16);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .ctrl-btn.btn-rose {
+      background-color: rgba(225, 29, 72, 0.16);
+      color: #fda4af;
+      border-color: rgba(225, 29, 72, 0.4);
+    }
+
+    /* Horizontal Scrollable Week Tabs + Day Filter Row */
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .tabs-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      background-color: #162033;
+      color: #94a3b8;
+      border: 1px solid #263248;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab-btn.deload {
+      background-color: rgba(120, 53, 15, 0.35);
+      color: #fcd34d;
+      border-color: rgba(217, 119, 6, 0.45);
+    }
+    .tab-btn.active {
+      background-color: #ea580c;
+      color: #ffffff;
+      border-color: #f97316;
+      font-weight: 800;
+    }
+    .tab-btn.deload.active {
+      background-color: #f59e0b;
+      color: #090d16;
+      border-color: #fbbf24;
+      font-weight: 800;
+    }
+
+    /* Day Filter Bar */
+    .day-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      padding-top: 5px;
+      border-top: 1px solid #172033;
+    }
+    .day-pills {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      overflow-x: auto;
+    }
+    .day-filter-btn {
+      padding: 3px 7px;
+      border-radius: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      background-color: #162033;
+      color: #94a3b8;
+      border: 1px solid #263248;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .day-filter-btn.active {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+    .sheet-meta {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+      white-space: nowrap;
+    }
+
+    /* Main Table Container */
+    .schedule-wrap {
+      padding: 8px 6px 4px 6px;
+    }
+    .sheet-table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+      border: 2px solid #293548;
+      background-color: #0f172a;
+    }
+    .sheet-table th,
+    .sheet-table td {
+      border: 1px solid #263248;
+      padding: 0;
+      vertical-align: middle;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .cell-corner {
+      background-color: #0b1120;
+    }
+    .banner-current {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-align: center;
+      padding: 6px 4px !important;
+      font-size: 11.5px;
+      border-bottom: 2px solid #334155 !important;
+    }
+    .banner-ref {
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      color: #cbd5e1;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-align: center;
+      padding: 6px 4px !important;
+      font-size: 11px;
+      border-bottom: 2px solid #475569 !important;
+      border-left: 2px solid #64748b !important;
+    }
+
+    /* Column Headers (Exact Excel Colors in Dark Mode) */
+    .hdr-exercise {
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+      padding: 6px 4px !important;
+    }
+    .hdr-target {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 10px;
+      text-align: center;
+      padding: 6px 2px !important;
+    }
+    .hdr-weight {
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+      padding: 6px 2px !important;
+    }
+    .hdr-reps {
+      background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+      padding: 6px 2px !important;
+    }
+    .hdr-ref-weight {
+      background: linear-gradient(180deg, #193829 0%, #11281d 100%);
+      color: #86efac;
+      font-weight: 700;
+      font-size: 10px;
+      text-align: center;
+      padding: 6px 2px !important;
+      border-left: 2px solid #64748b !important;
+    }
+    .hdr-ref-reps {
+      background: linear-gradient(180deg, #3d2814 0%, #2a1b0d 100%);
+      color: #fdba74;
+      font-weight: 700;
+      font-size: 10px;
+      text-align: center;
+      padding: 6px 2px !important;
+    }
+
+    /* Data Cells */
+    .cell-day {
+      background-color: #111a2e;
+      color: #e2e8f0;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+      padding: 4px 2px !important;
+      border-right: 2px solid #2e3d59 !important;
+    }
+    .cell-exercise {
+      background-color: #162033;
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 11.5px;
+      line-height: 1.25;
+      padding: 6px 6px !important;
+    }
+    .cell-target {
+      background-color: #2c1620;
+      color: #fda4af;
+      font-weight: 700;
+      font-size: 10.5px;
+      line-height: 1.2;
+      text-align: center;
+      padding: 6px 3px !important;
+    }
+    .cell-target.target-white {
+      background-color: #3b1c2a;
+      color: #ffffff;
+      box-shadow: inset 0 0 0 1px rgba(251, 113, 133, 0.4);
+    }
+    .cell-target.target-red {
+      background-color: #4c1524;
+      color: #fecdd3;
+      box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.65);
+    }
+    .cell-weight {
+      background-color: #0d1526;
+      color: #4ade80;
+      font-weight: 700;
+      text-align: center;
+    }
+    .cell-reps {
+      background-color: #0d1526;
+      color: #fbbf24;
+      font-weight: 700;
+      text-align: center;
+    }
+    .cell-weight:focus-within {
+      background-color: #13233f;
+      box-shadow: inset 0 0 0 2px #22c55e;
+    }
+    .cell-reps:focus-within {
+      background-color: #13233f;
+      box-shadow: inset 0 0 0 2px #f59e0b;
+    }
+    .cell-ref-weight {
+      background-color: #0b131e;
+      color: #6ee7b7;
+      text-align: center;
+      font-size: 10.5px;
+      padding: 5px 2px !important;
+      border-left: 2px solid #475569 !important;
+    }
+    .cell-ref-reps {
+      background-color: #0b131e;
+      color: #fcd34d;
+      text-align: center;
+      font-size: 10.5px;
+      padding: 5px 2px !important;
+    }
+    .cell-off {
+      background: repeating-linear-gradient(
+        -45deg,
+        #2b230b,
+        #2b230b 10px,
+        #231c08 10px,
+        #231c08 20px
+      );
+      color: #facc15;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-align: center;
+      padding: 11px 8px !important;
+      border-top: 1px solid #854d0e !important;
+      border-bottom: 1px solid #854d0e !important;
+    }
+    .row-spacer td {
+      height: 8px;
+      background-color: #070b12;
+      border-left: 1px solid #1e293b;
+      border-right: 1px solid #1e293b;
+      border-top: 1px solid #263248;
+      border-bottom: 1px solid #263248;
+    }
+    .cell-input {
+      width: 100%;
+      min-height: 30px;
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      padding: 4px 2px;
+      font-size: 10.5px;
+      color: inherit;
+      font-weight: inherit;
+    }
+    .cell-input-left {
+      text-align: left;
+      padding: 4px 6px;
+    }
+    .cell-input::placeholder {
+      color: #475569;
+      font-weight: 400;
+    }
+
+    /* Bottom Sheet Selector Bar */
+    .bottom-bar {
+      margin: 8px 6px 0 6px;
+      background-color: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-arrow-btn {
+      padding: 4px 8px;
+      border-radius: 5px;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btab-btn {
+      flex-shrink: 0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      background-color: #0b1120;
+      color: #94a3b8;
+      border: 1px solid #1e293b;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btab-btn.active {
+      background-color: #f8fafc;
+      color: #090d16;
+      border-top: 2px solid #ea580c;
+      font-weight: 800;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      background-color: rgba(0, 0, 0, 0.82);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 64px 14px 20px 14px;
+    }
+    .modal-card {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      max-width: 380px;
+      width: 100%;
+      padding: 18px;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.9);
+    }
+    .modal-card-error {
+      border: 2px solid #e11d48;
+      text-align: center;
+    }
+    .err-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: rgba(244, 63, 94, 0.18);
+      border: 1px solid rgba(244, 63, 94, 0.5);
+      color: #fb7185;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+      font-size: 20px;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="appShell" class="iphone-air-shell">
+    <!-- Sticky Top Header -->
+    <header class="app-header">
+      <div class="header-row-1">
+        <div class="brand-group">
+          <!-- Three dashes top-left button -->
+          <button id="btnHamburgerMenu" type="button" aria-label="Open Navigation Menu" aria-expanded="false" class="hamburger-btn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </button>
+
+          <!-- Dropdown Menu: Chat, Exercise, Diet, Settings -->
+          <div id="sideNavMenu" class="side-nav-menu hidden">
+            <div class="side-nav-header">Menu</div>
+            <button type="button" data-nav-item="Chat" class="nav-menu-item">
+              <span>Chat</span>
+              <span>💬</span>
+            </button>
+            <button type="button" data-nav-item="Exercise" class="nav-menu-item active-nav">
+              <span>Exercise</span>
+              <span class="nav-tag">Active</span>
+            </button>
+            <button type="button" data-nav-item="Diet" class="nav-menu-item">
+              <span>Diet</span>
+              <span>🥗</span>
+            </button>
+            <button type="button" data-nav-item="Settings" class="nav-menu-item">
+              <span>Settings</span>
+              <span>⚙️</span>
+            </button>
+          </div>
+
+          <div class="title-wrap">
+            <h1 class="app-title">NEW Gym Schedule</h1>
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              <span id="saveStatusText">iPhone Air • Saved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="action-group">
+          <button id="btnQuickFull" type="button" title="Fill 'Full' into active Reps cell" class="ctrl-btn btn-amber">+"Full"</button>
+          <button id="btnQuickDash" type="button" title="Fill '-' into active cell" class="ctrl-btn">+"-"</button>
+          <button id="btnToggleEditStructure" type="button" class="ctrl-btn"><span id="editStructureLabel">Edit: Off</span></button>
+          <button id="btnDownloadHtml" type="button" title="Download standalone HTML file" class="ctrl-btn btn-emerald">Save HTML</button>
+          <button id="btnExportJson" type="button" class="ctrl-btn">Backup</button>
+          <button id="btnOpenResetModal" type="button" class="ctrl-btn btn-rose">Reset</button>
+        </div>
+      </div>
+
+      <!-- Week Selector Tabs -->
+      <div id="topSheetTabs" class="tabs-bar" role="tablist" aria-label="Program Weeks">
+        <button type="button" data-sheet-idx="0" class="sheet-tab-btn tab-btn active">Week 1</button><button type="button" data-sheet-idx="1" class="sheet-tab-btn tab-btn">Week 2</button><button type="button" data-sheet-idx="2" class="sheet-tab-btn tab-btn">Week 3</button><button type="button" data-sheet-idx="3" class="sheet-tab-btn tab-btn">Week 4</button><button type="button" data-sheet-idx="4" class="sheet-tab-btn tab-btn">Week 5</button><button type="button" data-sheet-idx="5" class="sheet-tab-btn tab-btn">Week 6</button><button type="button" data-sheet-idx="6" class="sheet-tab-btn tab-btn deload">DELOAD 1</button><button type="button" data-sheet-idx="7" class="sheet-tab-btn tab-btn">Week 8</button><button type="button" data-sheet-idx="8" class="sheet-tab-btn tab-btn">Week 9</button><button type="button" data-sheet-idx="9" class="sheet-tab-btn tab-btn">Week 10</button><button type="button" data-sheet-idx="10" class="sheet-tab-btn tab-btn">Week 11</button><button type="button" data-sheet-idx="11" class="sheet-tab-btn tab-btn">Week 12</button><button type="button" data-sheet-idx="12" class="sheet-tab-btn tab-btn">Week 13</button><button type="button" data-sheet-idx="13" class="sheet-tab-btn tab-btn deload">DELOAD 2</button>
+      </div>
+
+      <!-- Day Filter & Active Sheet Label -->
+      <div class="day-bar">
+        <span id="activeSheetSummary" class="sheet-meta">Week 1 (WEEK 1)</span>
+        <div class="day-pills" role="group" aria-label="Filter by Day">
+          <button type="button" data-day="ALL" class="day-filter-btn active">All</button>
+          <button type="button" data-day="Day 1" class="day-filter-btn">D1</button>
+          <button type="button" data-day="Day 2" class="day-filter-btn">D2</button>
+          <button type="button" data-day="Day 3" class="day-filter-btn">D3</button>
+          <button type="button" data-day="Day 5" class="day-filter-btn">D5</button>
+          <button type="button" data-day="Day 6" class="day-filter-btn">D6</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Exercise Schedule View -->
+    <main id="exerciseView">
+      <div class="schedule-wrap">
+        <table id="scheduleTable" class="sheet-table">
+          <colgroup><col style="width:11%;"><col style="width:39%;"><col style="width:18%;"><col style="width:16%;"><col style="width:16%;"></colgroup>
+<thead><tr><th class="cell-corner"></th><th colspan="4" class="banner-current">WEEK 1</th></tr>
+<tr><th class="cell-corner"></th><th class="hdr-exercise">Excersise</th><th class="hdr-target">TARGET</th><th class="hdr-weight">Weight</th><th class="hdr-reps">Reps</th></tr></thead><tbody>
+<tr><td rowspan="5" class="cell-day">Day 1</td><td class="cell-exercise">DB Chest Fly</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="3" data-field="weight" value="5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="3" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Bench press</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="4" data-field="weight" value="7.5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="4" data-field="reps" value="11,10,10" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">DB shoulder press</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="5" data-field="weight" value="5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="5" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Cable Tricep extension </td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="6" data-field="weight" value="10" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="6" data-field="reps" value="12,11,10" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Tricep dips</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="7" data-field="weight" value="35" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="7" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td rowspan="5" class="cell-day">Day 2</td><td class="cell-exercise">Machine pulldown Normal</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="9" data-field="weight" value="33" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="9" data-field="reps" value="15,10,12" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Machine Chest supported row</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="10" data-field="weight" value="5 plate" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="10" data-field="reps" value="10,8,6" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">EZ bar Biceps curl</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="11" data-field="weight" value="10" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="11" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Machine preacher curl</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="12" data-field="weight" value="15" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="12" data-field="reps" value="7,6,4" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Cable face pull</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="13" data-field="weight" value="15" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="13" data-field="reps" value="15," placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td rowspan="5" class="cell-day">Day 3</td><td class="cell-exercise">Leg press</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="15" data-field="weight" value="-" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="15" data-field="reps" value="-" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Hack Squat</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="16" data-field="weight" value="-" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="16" data-field="reps" value="-" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Seated leg curl</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="17" data-field="weight" value="-" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="17" data-field="reps" value="-" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Donkey calf raises</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="18" data-field="weight" value="-" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="18" data-field="reps" value="-" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Calve on machine sitting</td><td class="cell-target mono-num">3 X 15-20</td><td class="cell-weight"><input type="text" data-row="19" data-field="weight" value="-" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="19" data-field="reps" value="-" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td class="cell-day">Day 4</td><td colspan="4" class="cell-off">OFF</td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td rowspan="4" class="cell-day">Day 5</td><td class="cell-exercise">Machine Chest fly</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="25" data-field="weight" value="20" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="25" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise"> Barbell incline press</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="26" data-field="weight" value="Empty bar" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="26" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Machine lateral raise </td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="27" data-field="weight" value="5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="27" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">EZ bar Skull Crusher</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="28" data-field="weight" value="10" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="28" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td rowspan="5" class="cell-day">Day 6</td><td class="cell-exercise">Underhand pulldown</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="30" data-field="weight" value="24" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="30" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Seated Cable row</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="31" data-field="weight" value="35" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="31" data-field="reps" value="12,10,7" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">DB sitting biceps curl</td><td class="cell-target mono-num">3 X 10-15</td><td class="cell-weight"><input type="text" data-row="32" data-field="weight" value="5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="32" data-field="reps" value="12,12,7" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">DB Shrugs</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="33" data-field="weight" value="10" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="33" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr><td class="cell-exercise">Dumbbell bench single wrist curl</td><td class="cell-target mono-num">3 X 8-12</td><td class="cell-weight"><input type="text" data-row="34" data-field="weight" value="5" placeholder="-" class="cell-input mono-num" /></td><td class="cell-reps"><input type="text" data-row="34" data-field="reps" value="Full" placeholder="-" class="cell-input mono-num" /></td></tr>
+<tr class="row-spacer"><td colspan="5"></td></tr>
+<tr><td class="cell-day">Day 7</td><td colspan="4" class="cell-off">OFF</td></tr>
+</tbody>
+        </table>
+      </div>
+
+      <!-- Bottom Excel-Style Sheet Tab Bar -->
+      <div class="bottom-bar">
+        <button id="btnPrevWeek" type="button" title="Previous Week" class="nav-arrow-btn">◀</button>
+        <div id="bottomSheetTabs" class="tabs-bar" style="flex: 1; padding-bottom: 0;">
+          <button type="button" data-sheet-idx="0" class="sheet-tab-btn btab-btn active">Week 1</button><button type="button" data-sheet-idx="1" class="sheet-tab-btn btab-btn">Week 2</button><button type="button" data-sheet-idx="2" class="sheet-tab-btn btab-btn">Week 3</button><button type="button" data-sheet-idx="3" class="sheet-tab-btn btab-btn">Week 4</button><button type="button" data-sheet-idx="4" class="sheet-tab-btn btab-btn">Week 5</button><button type="button" data-sheet-idx="5" class="sheet-tab-btn btab-btn">Week 6</button><button type="button" data-sheet-idx="6" class="sheet-tab-btn btab-btn">DELOAD 1</button><button type="button" data-sheet-idx="7" class="sheet-tab-btn btab-btn">Week 8</button><button type="button" data-sheet-idx="8" class="sheet-tab-btn btab-btn">Week 9</button><button type="button" data-sheet-idx="9" class="sheet-tab-btn btab-btn">Week 10</button><button type="button" data-sheet-idx="10" class="sheet-tab-btn btab-btn">Week 11</button><button type="button" data-sheet-idx="11" class="sheet-tab-btn btab-btn">Week 12</button><button type="button" data-sheet-idx="12" class="sheet-tab-btn btab-btn">Week 13</button><button type="button" data-sheet-idx="13" class="sheet-tab-btn btab-btn">DELOAD 2</button>
+        </div>
+        <button id="btnNextWeek" type="button" title="Next Week" class="nav-arrow-btn">▶</button>
+      </div>
+    </main>
+
+    <!-- In-Page Error View (when Chat, Diet, or Settings is clicked) -->
+    <section id="errorTabView" class="hidden" style="padding: 36px 14px; text-align: center;">
+      <div class="modal-card modal-card-error" style="margin: 0 auto;">
+        <div class="err-icon">!</div>
+        <div id="errorViewTabName" style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #fb7185; margin-bottom: 6px;">
+          Error
+        </div>
+        <p dir="auto" style="font-size: 17px; font-weight: 800; color: #ffffff; line-height: 1.6; margin: 0 0 18px 0;">
+          Error للحين ماخلص روح خلصه ولا لا تضغط
+        </p>
+        <button id="btnReturnToExerciseView" type="button" style="padding: 9px 18px; border-radius: 8px; background: #e11d48; color: #fff; font-weight: 800; font-size: 12px; border: none; cursor: pointer;">
+          Back to Exercise
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Error Modal Popup (for Chat, Diet, Settings) -->
+  <div id="navErrorModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-error">
+      <div class="err-icon">!</div>
+      <h2 id="navErrorTitle" style="font-size: 13px; font-weight: 800; color: #fb7185; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px 0;">Error</h2>
+      <p id="navErrorMessage" dir="auto" style="font-size: 17px; font-weight: 800; color: #ffffff; line-height: 1.6; margin: 0 0 18px 0;">
+        Error للحين ماخلص روح خلصه ولا لا تضغط
+      </p>
+      <button id="btnCloseNavError" type="button" style="padding: 9px 18px; border-radius: 8px; background: #e11d48; color: #ffffff; font-size: 12px; font-weight: 800; border: none; cursor: pointer;">
+        Back to Exercise
+      </button>
+    </div>
+  </div>
+
+  <!-- Backup / Restore Modal -->
+  <div id="backupModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <h2 style="font-size: 14px; font-weight: 800; color: #fff; margin: 0;">Backup / Restore (JSON)</h2>
+        <button id="btnCloseBackupModal" type="button" class="ctrl-btn">✕</button>
+      </div>
+      <p style="font-size: 11.5px; color: #94a3b8; margin: 0 0 8px 0;">
+        Your changes save automatically in your browser. Copy or download this JSON backup, or paste a backup below to restore.
+      </p>
+      <textarea id="backupJsonTextarea" rows="6" style="width: 100%; background: #060911; color: #e2e8f0; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 11px; font-family: monospace; margin-bottom: 10px;"></textarea>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px;">
+        <div style="display: flex; gap: 6px;">
+          <button id="btnCopyJson" type="button" class="ctrl-btn">Copy JSON</button>
+          <button id="btnDownloadJsonFile" type="button" class="ctrl-btn">Download .json</button>
+        </div>
+        <button id="btnImportJson" type="button" class="ctrl-btn btn-emerald">Restore</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="resetModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <h2 style="font-size: 14px; font-weight: 800; color: #fff; margin: 0 0 8px 0;">Reset to Original Drive Schedule?</h2>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0 0 14px 0;">
+        This will clear local browser edits and restore all 14 weeks to the original values from your <strong>NEW Gym Schedule.xlsx</strong> file.
+      </p>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button id="btnCancelReset" type="button" class="ctrl-btn">Cancel</button>
+        <button id="btnConfirmReset" type="button" class="ctrl-btn btn-rose">Reset Everything</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var DEFAULT_SCHEDULE_DATA = [{"id": "Week 1", "bannerLeft": "WEEK 1", "bannerRight": "", "refSheet": null, "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 8-12", "weight": "5", "reps": "Full", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "7.5", "reps": "11,10,10", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "5", "reps": "Full", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "10", "reps": "12,11,10", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "35", "reps": "Full", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "33", "reps": "15,10,12", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "5 plate", "reps": "10,8,6", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "10", "reps": "Full", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "15", "reps": "7,6,4", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "15", "reps": "15,", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "20", "reps": "Full", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "Empty bar", "reps": "Full", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "5", "reps": "Full", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "10", "reps": "Full", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "24", "reps": "Full", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "35", "reps": "12,10,7", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "5", "reps": "12,12,7", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 8-12", "weight": "10", "reps": "Full", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 8-12", "weight": "5", "reps": "Full", "targetHighlight": "normal"}}}, {"id": "Week 2", "bannerLeft": "WEEK 2", "bannerRight": "WEEK 1", "refSheet": "Week 1", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 8-12", "weight": "5", "reps": "Full", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "10", "reps": "24,17,14", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "7.5", "reps": "Full", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "10", "reps": "10,7,7", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "35", "reps": "12,5,5", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "33", "reps": "Full", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "5", "reps": "Full", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "15", "reps": "6,5,6", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "15", "reps": "9,7,10", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "15", "reps": "Full", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "25", "reps": "9,8,6", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "5 Plates", "reps": "12,8,6", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "25", "reps": "15,10,6", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "15", "reps": "7,4", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "33", "reps": "Full", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "35", "reps": "Full", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "5", "reps": "5,10,8", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "15", "reps": "10,9,8", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "7.5", "reps": "full", "targetHighlight": "normal"}}}, {"id": "Week 3", "bannerLeft": "WEEK 3", "bannerRight": "WEEK 2", "refSheet": "Week 2", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "-", "reps": "-", "targetHighlight": "normal"}}}, {"id": "Week 4", "bannerLeft": "WEEK 4", "bannerRight": "WEEK 3", "refSheet": "Week 3", "rows": {"3": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "15", "reps": "15,8,9", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "10", "reps": "Full", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "10", "reps": "12,12,0", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "10", "reps": "0", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "35", "reps": "0", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 5", "bannerLeft": "WEEK 5", "bannerRight": "WEEK 4", "refSheet": "Week 4", "rows": {"3": {"exercise": "DB Chest Fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "15": {"exercise": "Leg press", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "16": {"exercise": "Hack Squat", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "30": {"exercise": "Underhand pulldown", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}}}, {"id": "Week 6", "bannerLeft": "WEEK 6", "bannerRight": "WEEK 5", "refSheet": "Week 5", "rows": {"3": {"exercise": "DB Chest Fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "4": {"exercise": "Bench press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "5": {"exercise": "DB shoulder press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "6": {"exercise": "Cable Tricep extension ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "10": {"exercise": "Machine Chest supported row", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "11": {"exercise": "EZ bar Biceps curl", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "15": {"exercise": "Leg press", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "16": {"exercise": "Hack Squat", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "17": {"exercise": "Seated leg curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "18": {"exercise": "Donkey calf raises", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "26": {"exercise": " Barbell incline press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "27": {"exercise": "Machine lateral raise ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "30": {"exercise": "Underhand pulldown", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "31": {"exercise": "Seated Cable row", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "32": {"exercise": "DB sitting biceps curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}}}, {"id": "DELOAD 1", "bannerLeft": "WEEK 7 (Deload)", "bannerRight": "WEEK 1", "refSheet": "Week 1", "rows": {"3": {"exercise": "DB Chest Fly", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "2x 1/2 W1 weight", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 8", "bannerLeft": "WEEK 8", "bannerRight": "WEEK 6", "refSheet": "Week 6", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 9", "bannerLeft": "WEEK 9", "bannerRight": "WEEK 8", "refSheet": "Week 8", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 10", "bannerLeft": "WEEK 10", "bannerRight": "WEEK 9", "refSheet": "Week 9", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 11", "bannerLeft": "WEEK 1 1", "bannerRight": "WEEK 10", "refSheet": "Week 10", "rows": {"3": {"exercise": "DB Chest Fly", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "16": {"exercise": "Hack Squat", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}}}, {"id": "Week 12", "bannerLeft": "WEEK 12", "bannerRight": "WEEK 11", "refSheet": "Week 11", "rows": {"3": {"exercise": "DB Chest Fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "4": {"exercise": "Bench press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "10": {"exercise": "Machine Chest supported row", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "15": {"exercise": "Leg press", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "16": {"exercise": "Hack Squat", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "17": {"exercise": "Seated leg curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "19": {"exercise": "Calve on machine sitting", "target": "3 X 15-20", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "26": {"exercise": " Barbell incline press", "target": "3 X 8-12", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "30": {"exercise": "Underhand pulldown", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "31": {"exercise": "Seated Cable row", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "33": {"exercise": "DB Shrugs", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}}}, {"id": "Week 13", "bannerLeft": "WEEK 13", "bannerRight": "WEEK 12", "refSheet": "Week 12", "rows": {"3": {"exercise": "DB Chest Fly", "target": "5 X 10-15", "weight": "", "reps": "", "targetHighlight": "red"}, "4": {"exercise": "Bench press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "5": {"exercise": "DB shoulder press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "6": {"exercise": "Cable Tricep extension ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "7": {"exercise": "Tricep dips", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "5 X 10-15", "weight": "", "reps": "", "targetHighlight": "red"}, "10": {"exercise": "Machine Chest supported row", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "11": {"exercise": "EZ bar Biceps curl", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "12": {"exercise": "Machine preacher curl", "target": "3 X 10-15", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "15": {"exercise": "Leg press", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "16": {"exercise": "Hack Squat", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "17": {"exercise": "Seated leg curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "18": {"exercise": "Donkey calf raises", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "19": {"exercise": "Calve on machine sitting", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "25": {"exercise": "Machine Chest fly", "target": "5 X 10-15", "weight": "", "reps": "", "targetHighlight": "red"}, "26": {"exercise": " Barbell incline press", "target": "4 X 8-12", "weight": "", "reps": "", "targetHighlight": "white"}, "27": {"exercise": "Machine lateral raise ", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "30": {"exercise": "Underhand pulldown", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "31": {"exercise": "Seated Cable row", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "32": {"exercise": "DB sitting biceps curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "33": {"exercise": "DB Shrugs", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "4 X 10-15", "weight": "", "reps": "", "targetHighlight": "white"}}}, {"id": "DELOAD 2", "bannerLeft": "WEEK 14 (Deload)", "bannerRight": "WEEK 8", "refSheet": "Week 8", "rows": {"3": {"exercise": "DB Chest Fly", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "4": {"exercise": "Bench press", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "5": {"exercise": "DB shoulder press", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "6": {"exercise": "Cable Tricep extension ", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "7": {"exercise": "Tricep dips", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "9": {"exercise": "Machine pulldown Normal", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "10": {"exercise": "Machine Chest supported row", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "11": {"exercise": "EZ bar Biceps curl", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "12": {"exercise": "Machine preacher curl", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "13": {"exercise": "Cable face pull", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "15": {"exercise": "Leg press", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "16": {"exercise": "Hack Squat", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "17": {"exercise": "Seated leg curl", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "18": {"exercise": "Donkey calf raises", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "19": {"exercise": "Calve on machine sitting", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "25": {"exercise": "Machine Chest fly", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "26": {"exercise": " Barbell incline press", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "27": {"exercise": "Machine lateral raise ", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "28": {"exercise": "EZ bar Skull Crusher", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "30": {"exercise": "Underhand pulldown", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "31": {"exercise": "Seated Cable row", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "32": {"exercise": "DB sitting biceps curl", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "33": {"exercise": "DB Shrugs", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}, "34": {"exercise": "Dumbbell bench single wrist curl", "target": "2x 1/2 W8 weight", "weight": "", "reps": "", "targetHighlight": "normal"}}}];
+    var STORAGE_KEY = 'khalid_new_gym_schedule_v1';
+
+    var DAY_BLOCKS = [
+      { day: 'Day 1', type: 'workout', rows: [3, 4, 5, 6, 7], spacerAfter: true },
+      { day: 'Day 2', type: 'workout', rows: [9, 10, 11, 12, 13], spacerAfter: true },
+      { day: 'Day 3', type: 'workout', rows: [15, 16, 17, 18, 19], spacerAfter: true },
+      { day: 'Day 4', type: 'off', rows: [21, 22, 23], spacerAfter: true },
+      { day: 'Day 5', type: 'workout', rows: [25, 26, 27, 28], spacerAfter: true },
+      { day: 'Day 6', type: 'workout', rows: [30, 31, 32, 33, 34], spacerAfter: true },
+      { day: 'Day 7', type: 'off', rows: [36, 37, 38], spacerAfter: false }
+    ];
+
+    var appState = {
+      sheets: [],
+      activeSheetIndex: 0,
+      dayFilter: 'ALL',
+      editStructure: false,
+      lastFocusedInput: null,
+      initialized: false
+    };
+
+    function cloneDefaultData() {
+      return JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_DATA));
+    }
+
+    function loadState() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length === DEFAULT_SCHEDULE_DATA.length) {
+            appState.sheets = parsed;
+            return;
+          }
+        }
+      } catch (e) {}
+      appState.sheets = cloneDefaultData();
+    }
+
+    function saveState(statusMsg) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState.sheets));
+      } catch (e) {}
+      var badgeText = document.getElementById('saveStatusText');
+      if (badgeText) {
+        badgeText.textContent = statusMsg || 'iPhone Air • Saved';
+      }
+    }
+
+    function getSheetByName(name) {
+      if (!name) return null;
+      for (var i = 0; i < appState.sheets.length; i++) {
+        if (appState.sheets[i].id === name) return appState.sheets[i];
+      }
+      return null;
+    }
+
+    function detectTargetHighlight(targetStr, defaultHighlight) {
+      var s = String(targetStr || '').trim().toUpperCase();
+      if (s.indexOf('5 X') === 0 || s.indexOf('5X') === 0) return 'red';
+      if (s.indexOf('4 X') === 0 || s.indexOf('4X') === 0) return 'white';
+      return defaultHighlight || 'normal';
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderTabs() {
+      var topContainer = document.getElementById('topSheetTabs');
+      var bottomContainer = document.getElementById('bottomSheetTabs');
+      if (!topContainer || !bottomContainer) return;
+
+      var topHtml = '';
+      var bottomHtml = '';
+
+      appState.sheets.forEach(function(sheet, idx) {
+        var isActive = idx === appState.activeSheetIndex;
+        var isDeload = sheet.id.toUpperCase().indexOf('DELOAD') !== -1;
+
+        var topCls = 'sheet-tab-btn tab-btn' + (isDeload ? ' deload' : '') + (isActive ? ' active' : '');
+        var botCls = 'sheet-tab-btn btab-btn' + (isActive ? ' active' : '');
+
+        topHtml += '<button type="button" data-sheet-idx="' + idx + '" class="' + topCls + '">' + escapeHtml(sheet.id) + '</button>';
+        bottomHtml += '<button type="button" data-sheet-idx="' + idx + '" class="' + botCls + '">' + escapeHtml(sheet.id) + '</button>';
+      });
+
+      topContainer.innerHTML = topHtml;
+      bottomContainer.innerHTML = bottomHtml;
+
+      document.querySelectorAll('.sheet-tab-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.getAttribute('data-sheet-idx'), 10);
+          if (!isNaN(idx)) {
+            appState.activeSheetIndex = idx;
+            showExerciseSection();
+            renderApp();
+          }
+        });
+      });
+    }
+
+    function renderDayFilters() {
+      document.querySelectorAll('.day-filter-btn').forEach(function(btn) {
+        var day = btn.getAttribute('data-day');
+        if (day === appState.dayFilter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function renderTable() {
+      var table = document.getElementById('scheduleTable');
+      var sheet = appState.sheets[appState.activeSheetIndex];
+      if (!table || !sheet) return;
+
+      var refSheet = getSheetByName(sheet.refSheet);
+      var hasRef = Boolean(refSheet);
+
+      var summaryEl = document.getElementById('activeSheetSummary');
+      if (summaryEl) {
+        summaryEl.textContent = hasRef
+          ? (sheet.id + ' • Ref: ' + refSheet.id)
+          : (sheet.id + ' (' + sheet.bannerLeft + ')');
+      }
+
+      var colgroupHtml = '';
+      if (hasRef) {
+        colgroupHtml = '<colgroup>' +
+          '<col style="width: 9%;" />' +
+          '<col style="width: 28%;" />' +
+          '<col style="width: 14%;" />' +
+          '<col style="width: 12%;" />' +
+          '<col style="width: 15%;" />' +
+          '<col style="width: 10%;" />' +
+          '<col style="width: 12%;" />' +
+          '</colgroup>';
+      } else {
+        colgroupHtml = '<colgroup>' +
+          '<col style="width: 11%;" />' +
+          '<col style="width: 39%;" />' +
+          '<col style="width: 18%;" />' +
+          '<col style="width: 16%;" />' +
+          '<col style="width: 16%;" />' +
+          '</colgroup>';
+      }
+
+      var theadHtml = '<thead>' +
+        '<tr>' +
+          '<th class="cell-corner"></th>' +
+          '<th colspan="4" class="banner-current">' + escapeHtml(sheet.bannerLeft) + '</th>' +
+          (hasRef ? '<th colspan="2" class="banner-ref">' + escapeHtml(sheet.bannerRight) + '</th>' : '') +
+        '</tr>' +
+        '<tr>' +
+          '<th class="cell-corner"></th>' +
+          '<th class="hdr-exercise">Excersise</th>' +
+          '<th class="hdr-target">TARGET</th>' +
+          '<th class="hdr-weight">Weight</th>' +
+          '<th class="hdr-reps">Reps</th>' +
+          (hasRef ? '<th class="hdr-ref-weight">Weight</th><th class="hdr-ref-reps">Reps</th>' : '') +
+        '</tr>' +
+      '</thead>';
+
+      var tbodyHtml = '<tbody>';
+
+      var blocksToRender = appState.dayFilter === 'ALL'
+        ? DAY_BLOCKS
+        : DAY_BLOCKS.filter(function(b) { return b.day === appState.dayFilter; });
+
+      blocksToRender.forEach(function(block, blockIdx) {
+        if (block.type === 'off') {
+          var offColspan = hasRef ? 6 : 4;
+          tbodyHtml += '<tr>' +
+            '<td class="cell-day">' + escapeHtml(block.day) + '</td>' +
+            '<td colspan="' + offColspan + '" class="cell-off">OFF</td>' +
+          '</tr>';
+        } else {
+          var rowCount = block.rows.length;
+          block.rows.forEach(function(rNum, rIdx) {
+            var rKey = String(rNum);
+            var rowData = sheet.rows[rKey] || { exercise: '', target: '', weight: '', reps: '', targetHighlight: 'normal' };
+            var refRowData = (hasRef && refSheet.rows && refSheet.rows[rKey])
+              ? refSheet.rows[rKey]
+              : { weight: '', reps: '' };
+
+            var hl = detectTargetHighlight(rowData.target, rowData.targetHighlight);
+            var targetHlClass = hl === 'red' ? 'target-red' : (hl === 'white' ? 'target-white' : '');
+
+            tbodyHtml += '<tr>';
+            if (rIdx === 0) {
+              tbodyHtml += '<td rowspan="' + rowCount + '" class="cell-day">' + escapeHtml(block.day) + '</td>';
+            }
+
+            if (appState.editStructure) {
+              tbodyHtml += '<td class="cell-exercise" style="padding:0 !important;">' +
+                '<input type="text" data-row="' + rKey + '" data-field="exercise" value="' + escapeHtml(rowData.exercise) + '" class="cell-input cell-input-left" />' +
+              '</td>';
+            } else {
+              tbodyHtml += '<td class="cell-exercise">' + escapeHtml(rowData.exercise) + '</td>';
+            }
+
+            if (appState.editStructure) {
+              tbodyHtml += '<td class="cell-target ' + targetHlClass + '" style="padding:0 !important;">' +
+                '<input type="text" data-row="' + rKey + '" data-field="target" value="' + escapeHtml(rowData.target) + '" class="cell-input mono-num" />' +
+              '</td>';
+            } else {
+              tbodyHtml += '<td class="cell-target ' + targetHlClass + ' mono-num">' + escapeHtml(rowData.target) + '</td>';
+            }
+
+            tbodyHtml += '<td class="cell-weight">' +
+              '<input type="text" data-row="' + rKey + '" data-field="weight" value="' + escapeHtml(rowData.weight) + '" placeholder="-" class="cell-input mono-num" />' +
+            '</td>' +
+            '<td class="cell-reps">' +
+              '<input type="text" data-row="' + rKey + '" data-field="reps" value="' + escapeHtml(rowData.reps) + '" placeholder="-" class="cell-input mono-num" />' +
+            '</td>';
+
+            if (hasRef) {
+              var refWeightDisplay = refRowData.weight !== '' ? refRowData.weight : '-';
+              var refRepsDisplay = refRowData.reps !== '' ? refRowData.reps : '-';
+              tbodyHtml += '<td class="cell-ref-weight mono-num">' + escapeHtml(refWeightDisplay) + '</td>' +
+                '<td class="cell-ref-reps mono-num">' + escapeHtml(refRepsDisplay) + '</td>';
+            }
+
+            tbodyHtml += '</tr>';
+          });
+        }
+
+        if (block.spacerAfter && appState.dayFilter === 'ALL' && blockIdx < blocksToRender.length - 1) {
+          var totalCols = hasRef ? 7 : 5;
+          tbodyHtml += '<tr class="row-spacer"><td colspan="' + totalCols + '"></td></tr>';
+        }
+      });
+
+      tbodyHtml += '</tbody>';
+      table.innerHTML = colgroupHtml + theadHtml + tbodyHtml;
+
+      table.querySelectorAll('.cell-input').forEach(function(input) {
+        input.addEventListener('focus', function() {
+          appState.lastFocusedInput = input;
+        });
+        input.addEventListener('input', function() {
+          var rKey = input.getAttribute('data-row');
+          var field = input.getAttribute('data-field');
+          if (rKey && field && sheet.rows[rKey]) {
+            sheet.rows[rKey][field] = input.value;
+            if (field === 'target') {
+              var td = input.closest('td');
+              if (td) {
+                td.classList.remove('target-white', 'target-red');
+                var newHl = detectTargetHighlight(input.value, 'normal');
+                if (newHl === 'white') td.classList.add('target-white');
+                if (newHl === 'red') td.classList.add('target-red');
+              }
+            }
+            saveState('Saved');
+          }
+        });
+      });
+    }
+
+    function showExerciseSection() {
+      var exView = document.getElementById('exerciseView');
+      var errView = document.getElementById('errorTabView');
+      var navErrorModal = document.getElementById('navErrorModal');
+      if (exView) exView.classList.remove('hidden');
+      if (errView) errView.classList.add('hidden');
+      if (navErrorModal) navErrorModal.classList.add('hidden');
+
+      document.querySelectorAll('.nav-menu-item').forEach(function(btn) {
+        if (btn.getAttribute('data-nav-item') === 'Exercise') {
+          btn.classList.add('active-nav');
+        } else {
+          btn.classList.remove('active-nav');
+        }
+      });
+    }
+
+    function showUnfinishedTabError(tabName) {
+      var navErrorModal = document.getElementById('navErrorModal');
+      var errTitle = document.getElementById('navErrorTitle');
+
+      if (errTitle) errTitle.textContent = tabName + ' — Error';
+      if (navErrorModal) navErrorModal.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-menu-item').forEach(function(btn) {
+        if (btn.getAttribute('data-nav-item') === tabName) {
+          btn.classList.add('active-nav');
+        } else {
+          btn.classList.remove('active-nav');
+        }
+      });
+    }
+
+    function renderApp() {
+      renderTabs();
+      renderDayFilters();
+      renderTable();
+      var editLabel = document.getElementById('editStructureLabel');
+      if (editLabel) {
+        editLabel.textContent = appState.editStructure ? 'Edit: On' : 'Edit: Off';
+      }
+    }
+
+    function downloadUpdatedHtml() {
+      var currentJson = JSON.stringify(appState.sheets);
+      var docClone = document.documentElement.outerHTML;
+      var openTag = '<!DOC' + 'TYPE html>\n';
+      var updatedHtml = openTag + docClone.replace(
+        /var DEFAULT_SCHEDULE_DATA = [\s\S]*?;\n\s*var STORAGE_KEY/,
+        'var DEFAULT_SCHEDULE_DATA = ' + currentJson + ';\n    var STORAGE_KEY'
+      );
+      var blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      saveState('Saved index.html');
+    }
+
+    function initEvents() {
+      var hamburgerBtn = document.getElementById('btnHamburgerMenu');
+      var sideNavMenu = document.getElementById('sideNavMenu');
+      var navErrorModal = document.getElementById('navErrorModal');
+      var btnCloseNavError = document.getElementById('btnCloseNavError');
+      var btnReturnToExerciseView = document.getElementById('btnReturnToExerciseView');
+
+      function closeSideMenu() {
+        if (sideNavMenu) {
+          sideNavMenu.classList.add('hidden');
+          if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      if (hamburgerBtn && sideNavMenu) {
+        hamburgerBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var isHidden = sideNavMenu.classList.contains('hidden');
+          if (isHidden) {
+            sideNavMenu.classList.remove('hidden');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            closeSideMenu();
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!sideNavMenu.contains(e.target) && e.target !== hamburgerBtn && !hamburgerBtn.contains(e.target)) {
+            closeSideMenu();
+          }
+        });
+      }
+
+      document.querySelectorAll('.nav-menu-item').forEach(function(itemBtn) {
+        itemBtn.addEventListener('click', function() {
+          var targetTab = itemBtn.getAttribute('data-nav-item');
+          closeSideMenu();
+          if (targetTab === 'Exercise') {
+            showExerciseSection();
+            renderApp();
+          } else {
+            showUnfinishedTabError(targetTab || 'Error');
+          }
+        });
+      });
+
+      if (btnCloseNavError) {
+        btnCloseNavError.addEventListener('click', function() {
+          if (navErrorModal) navErrorModal.classList.add('hidden');
+          showExerciseSection();
+        });
+      }
+
+      if (btnReturnToExerciseView) {
+        btnReturnToExerciseView.addEventListener('click', function() {
+          showExerciseSection();
+        });
+      }
+
+      document.querySelectorAll('.day-filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          appState.dayFilter = btn.getAttribute('data-day') || 'ALL';
+          showExerciseSection();
+          renderApp();
+        });
+      });
+
+      document.getElementById('btnPrevWeek').addEventListener('click', function() {
+        if (appState.activeSheetIndex > 0) {
+          appState.activeSheetIndex--;
+          renderApp();
+        }
+      });
+      document.getElementById('btnNextWeek').addEventListener('click', function() {
+        if (appState.activeSheetIndex < appState.sheets.length - 1) {
+          appState.activeSheetIndex++;
+          renderApp();
+        }
+      });
+
+      document.getElementById('btnQuickFull').addEventListener('click', function() {
+        var input = appState.lastFocusedInput;
+        if (input && document.body.contains(input)) {
+          input.value = 'Full';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+        }
+      });
+
+      document.getElementById('btnQuickDash').addEventListener('click', function() {
+        var input = appState.lastFocusedInput;
+        if (input && document.body.contains(input)) {
+          input.value = '-';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+        }
+      });
+
+      document.getElementById('btnToggleEditStructure').addEventListener('click', function() {
+        appState.editStructure = !appState.editStructure;
+        renderApp();
+      });
+
+      document.getElementById('btnDownloadHtml').addEventListener('click', downloadUpdatedHtml);
+
+      var backupModal = document.getElementById('backupModal');
+      var backupTextarea = document.getElementById('backupJsonTextarea');
+      document.getElementById('btnExportJson').addEventListener('click', function() {
+        backupTextarea.value = JSON.stringify(appState.sheets, null, 2);
+        backupModal.classList.remove('hidden');
+      });
+      document.getElementById('btnCloseBackupModal').addEventListener('click', function() {
+        backupModal.classList.add('hidden');
+      });
+      document.getElementById('btnCopyJson').addEventListener('click', function() {
+        backupTextarea.select();
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(backupTextarea.value);
+          } else {
+            document.execCommand('copy');
+          }
+          saveState('Copied JSON');
+        } catch (e) {
+          document.execCommand('copy');
+        }
+      });
+      document.getElementById('btnDownloadJsonFile').addEventListener('click', function() {
+        var blob = new Blob([JSON.stringify(appState.sheets, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'new-gym-schedule-backup.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+      document.getElementById('btnImportJson').addEventListener('click', function() {
+        try {
+          var parsed = JSON.parse(backupTextarea.value);
+          if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].rows) {
+            appState.sheets = parsed;
+            saveState('Restored');
+            renderApp();
+            backupModal.classList.add('hidden');
+          }
+        } catch (err) {
+          saveState('Invalid JSON');
+        }
+      });
+
+      var resetModal = document.getElementById('resetModal');
+      document.getElementById('btnOpenResetModal').addEventListener('click', function() {
+        resetModal.classList.remove('hidden');
+      });
+      document.getElementById('btnCancelReset').addEventListener('click', function() {
+        resetModal.classList.add('hidden');
+      });
+      document.getElementById('btnConfirmReset').addEventListener('click', function() {
+        appState.sheets = cloneDefaultData();
+        saveState('Reset Done');
+        renderApp();
+        resetModal.classList.add('hidden');
+      });
+    }
+
+    function bootApp() {
+      if (appState.initialized) return;
+      appState.initialized = true;
+      loadState();
+      initEvents();
+      renderApp();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootApp);
+    } else {
+      bootApp();
+    }
+    window.addEventListener('load', bootApp);
+  })();
+  </script>
+</body>
+</html>
